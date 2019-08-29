@@ -1,0 +1,22 @@
+{
+  "name": "cordova-out-calls",
+  "version": "1.0.0",
+  "description": "Cordova plugin that makes phone calls and send them to backround",
+  "cordova": {
+    "id": "cordova-out-calls",
+    "platforms": [
+      "android"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jonybuzz/cordova-out-calls.git"
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android"
+  ],
+  "homepage": "https://github.com/jonybuzz/cordova-out-calls",
+  "author": "Jonathan Buzzetti",
+  "license": "MIT"
+}
