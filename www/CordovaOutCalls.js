@@ -1,7 +1,7 @@
 var exec = require('cordova/exec');
 
-exports.callNumber = function(to, success, error) {
-    exec(success, error, "CordovaOutCalls", "callNumber", [to]);
+exports.callNumber = function(to, chooserTitle, success, error) {
+    exec(success, error, "CordovaOutCalls", "callNumber", [to, chooserTitle]);
 };
 
 exports.on = function(e, f) {

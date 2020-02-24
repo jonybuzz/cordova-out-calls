@@ -13,7 +13,6 @@ import android.net.Uri;
 import android.Manifest;
 import org.json.JSONArray;
 import org.json.JSONException;
-import android.util.Log;
 
 public class CordovaOutCalls extends CordovaPlugin {
 
@@ -63,15 +62,19 @@ public class CordovaOutCalls extends CordovaPlugin {
 
     private void callNumber() {
         try {
-          Intent intent = new Intent(Intent.ACTION_CALL, Uri.fromParts("tel", realCallTo, null));
+            Intent intent = new Intent(Intent.ACTION_CALL, Uri.fromParts("tel", realCallTo, null));
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            this.cordova.getActivity().getApplicationContext().startActivity(intent);
+
+            Intent chooser = Intent.createChooser(intent, chooserTitle);
+            chooser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            this.cordova.getActivity().getApplicationContext().startActivity(chooser);
+
             final Handler handler = new Handler(Looper.getMainLooper());
             handler.postDelayed(() -> {
                 Intent intent1 = new Intent(CordovaOutCalls.getCordova().getActivity().getApplicationContext(), CordovaOutCalls.getCordova().getActivity().getClass());
                 intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 CordovaOutCalls.getCordova().getActivity().getApplicationContext().startActivity(intent1);
-            }, 3000);
+            }, 4000);
             this.callbackContext.success("Outgoing call successful");
           this.callbackContext.success("Call Successful");
         } catch(Exception e) {

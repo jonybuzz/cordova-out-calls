@@ -1,7 +1,7 @@
 {
   "name": "cordova-out-calls",
-  "version": "1.0.0",
-  "description": "Cordova plugin that makes phone calls and send them to backround",
+  "version": "1.1.0",
+  "description": "Cordova plugin that makes phone calls and send them to background",
   "cordova": {
     "id": "cordova-out-calls",
     "platforms": [
