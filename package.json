@@ -1,6 +1,6 @@
 {
   "name": "cordova-out-calls",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Cordova plugin that makes phone calls and send them to background",
   "cordova": {
     "id": "cordova-out-calls",

@@ -20,6 +20,7 @@ public class CordovaOutCalls extends CordovaPlugin {
     private CallbackContext callbackContext;
     private String realCallTo;
     private String chooserTitle;
+    private String appPackage;
     private static CordovaInterface cordovaInterface;
 
     public static CordovaInterface getCordova() {
@@ -45,6 +46,9 @@ public class CordovaOutCalls extends CordovaPlugin {
             if (args.length() > 1) {
                 chooserTitle = args.getString(1);
             }
+            if (args.length() > 2) {
+                appPackage = args.getString(2);
+            }
             if (realCallTo != null) {
                 cordova.getThreadPool().execute(() -> callNumberPhonePermission());
                 this.callbackContext.success("Call Successful");
@@ -66,12 +70,19 @@ public class CordovaOutCalls extends CordovaPlugin {
 
     private void callNumber() {
         try {
-            Intent intent = new Intent(Intent.ACTION_CALL, Uri.fromParts("tel", realCallTo, null));
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            if (appPackage != null) {
+                Intent intent = new Intent(Intent.ACTION_CALL, Uri.fromParts("tel", realCallTo, null));
+                intent.setPackage(appPackage);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                this.cordova.getActivity().getApplicationContext().startActivity(intent);
+            } else {
+                Intent intent = new Intent(Intent.ACTION_CALL, Uri.fromParts("tel", realCallTo, null));
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
-            Intent chooser = Intent.createChooser(intent, chooserTitle);
-            chooser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            this.cordova.getActivity().getApplicationContext().startActivity(chooser);
+                Intent chooser = Intent.createChooser(intent, chooserTitle);
+                chooser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                this.cordova.getActivity().getApplicationContext().startActivity(chooser);
+            }
 
             final Handler handler = new Handler(Looper.getMainLooper());
             handler.postDelayed(() -> {
