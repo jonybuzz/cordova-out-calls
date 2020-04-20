@@ -11,6 +11,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.Manifest;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -51,7 +53,6 @@ public class CordovaOutCalls extends CordovaPlugin {
             }
             if (realCallTo != null) {
                 cordova.getThreadPool().execute(() -> callNumberPhonePermission());
-                this.callbackContext.success("Call Successful");
             } else {
                 this.callbackContext.error("Call Failed. You need to enter a phone number.");
             }
@@ -71,6 +72,9 @@ public class CordovaOutCalls extends CordovaPlugin {
     private void callNumber() {
         try {
             if (appPackage != null) {
+                if (!isPackageInstalled(appPackage)) {
+                    throw new Exception("App not found.");
+                }
                 Intent intent = new Intent(Intent.ACTION_CALL, Uri.fromParts("tel", realCallTo, null));
                 intent.setPackage(appPackage);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -90,10 +94,9 @@ public class CordovaOutCalls extends CordovaPlugin {
                 intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 CordovaOutCalls.getCordova().getActivity().getApplicationContext().startActivity(intent1);
             }, 4000);
-            this.callbackContext.success("Outgoing call successful");
-            this.callbackContext.success("Call Successful");
-        } catch (Exception e) {
-            this.callbackContext.error("Call Failed: " + e.getMessage());
+            this.callbackContext.success("Call Successful.");
+        } catch (Exception ex) {
+            this.callbackContext.error("Call Failed: " + ex.getMessage());
         }
     }
 
@@ -109,6 +112,15 @@ public class CordovaOutCalls extends CordovaPlugin {
             case REAL_PHONE_CALL:
                 this.callNumber();
                 break;
+        }
+    }
+
+    public boolean isPackageInstalled(String packageName) {
+        try {
+            return this.cordova.getActivity().getApplicationContext().getPackageManager()
+                    .getApplicationInfo(packageName, 0).enabled;
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
         }
     }
 }
